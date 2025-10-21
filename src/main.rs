@@ -1,21 +1,27 @@
+pub mod math;
+use math::Vec3;
+
 fn main() {
-  let image_width = 256;
-	let image_height = 256;
-	
-	println!("P3\n{} {}\n255", image_width, image_height);
-
-
-  for j in 0..image_height {
-		for i in 0..image_width {
-			let r: f64 = i as f64 / (image_width - 1) as f64;
-			let g: f64 = j as f64 / (image_height - 1) as f64;
-			let b: f64 = 0.0;
-
-			let ig = (255.999 * g) as i32;
-			let ib = (255.999 * b) as i32;
-			let ir = (255.999 * r) as i32;
-
-			println!("{} {} {}\n", ir, ig, ib);
-		}
-	}
+  println!("{}", Vec3::new(0, 1, 1) * Vec3::new(1, 1, 1));
+	println!("{}",  5.0 * Vec3::new(1, 1, 1));
+	println!("{}",  5 * Vec3::new(1, 1, 1));
+	println!("{}",  Vec3::new(1, 1, 1) * 5);
+	println!("{}",  Vec3::new(1, 1, 1) * 5.0);
+	println!("{}",  Vec3::new(1, 1, 1) / 5);
+	println!("{}",  Vec3::new(1, 1, 1) / 5.0);
+	println!("{}",  Vec3::new(1, 1, 1).dot(Vec3::new(1, 1, 1)));
+	println!("{}",  Vec3::new(1, 0, 0).cross(Vec3::new(0, 0, 1)));
+	println!("{}",  Vec3::new(1, 0, 0).unit_vector());
+	println!("{}",  Vec3::new(1, 1, 0).length());
+	println!("{}",  Vec3::new(1, 1, 0).length_squared());
+	println!("{}",  Vec3::new(1, 0, 0).unit_vector());
+	println!("{}",  Vec3::new(1, 1, 0).unit_vector());
+	let mut v = Vec3::new(0,0,0);
+	println!("{}", v);
+	v += Vec3::new(1,1,1);
+	println!("{}", v);
+	v /= -2.0;
+	println!("{}", v);
+	v *= 10;
+	println!("{}", v);
 }
