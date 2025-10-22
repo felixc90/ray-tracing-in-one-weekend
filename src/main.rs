@@ -1,27 +1,26 @@
-pub mod math;
-use math::Vec3;
+pub mod color;
+pub mod vec3;
+use std::io::{self, Write};
+
+use color::{Color, write_color};
 
 fn main() {
-  println!("{}", Vec3::new(0, 1, 1) * Vec3::new(1, 1, 1));
-	println!("{}",  5.0 * Vec3::new(1, 1, 1));
-	println!("{}",  5 * Vec3::new(1, 1, 1));
-	println!("{}",  Vec3::new(1, 1, 1) * 5);
-	println!("{}",  Vec3::new(1, 1, 1) * 5.0);
-	println!("{}",  Vec3::new(1, 1, 1) / 5);
-	println!("{}",  Vec3::new(1, 1, 1) / 5.0);
-	println!("{}",  Vec3::new(1, 1, 1).dot(Vec3::new(1, 1, 1)));
-	println!("{}",  Vec3::new(1, 0, 0).cross(Vec3::new(0, 0, 1)));
-	println!("{}",  Vec3::new(1, 0, 0).unit_vector());
-	println!("{}",  Vec3::new(1, 1, 0).length());
-	println!("{}",  Vec3::new(1, 1, 0).length_squared());
-	println!("{}",  Vec3::new(1, 0, 0).unit_vector());
-	println!("{}",  Vec3::new(1, 1, 0).unit_vector());
-	let mut v = Vec3::new(0,0,0);
-	println!("{}", v);
-	v += Vec3::new(1,1,1);
-	println!("{}", v);
-	v /= -2.0;
-	println!("{}", v);
-	v *= 10;
-	println!("{}", v);
+
+	let image_height = 256;
+	let image_width = 256;
+
+	let mut stdout = io::stdout();
+	if let Err(e) = writeln!(stdout, "P3\n{} {}\n255\n", image_width, image_height) {
+		eprintln!("Couldn't write to file: {}", e);
+	}
+
+	for j in 0..image_height {
+		for i in 0..image_width {
+			let pixel_color = Color::new(
+				(i as f64)/(image_width - 1) as f64, 
+				(j as f64)/(image_height - 1) as f64, 
+				0.0);
+      write_color(&mut stdout, pixel_color)
+		}
+	}
 }

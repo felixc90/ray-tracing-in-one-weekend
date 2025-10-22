@@ -8,6 +8,8 @@ pub struct Vec3 {
 	z: f64
 }
 
+pub type Point3 = Vec3;
+
 impl Vec3 {
 	pub fn new<T: Into<f64>>(x: T, y: T, z: T) -> Self {
 		Vec3 { 
@@ -15,6 +17,18 @@ impl Vec3 {
 			y: y.into(), 
 			z: z.into()
 		}
+	}
+
+	pub fn x(&self) -> f64 {
+		self.x
+	}
+
+	pub fn y(&self) -> f64 {
+		self.y
+	}
+
+	pub fn z(&self) -> f64 {
+		self.z
 	}
 
 	pub fn length_squared(&self) -> f64 {
