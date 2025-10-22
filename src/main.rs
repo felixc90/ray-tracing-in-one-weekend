@@ -2,16 +2,18 @@ pub mod color;
 pub mod vec3;
 pub mod ray;
 
-use std::io::{self, Write};
+use std::{fs::File, io::{self, Write}};
 use color::{Color, write_color};
 use ray::{Ray};
 use vec3::{Point3, Vec3};
 
-fn ray_color(_r: Ray) -> Color {
-	Color::new(0,0,0)
+fn ray_color(r: Ray) -> Color {
+	let unit_direction = r.direction().unit_vector();
+	let a = 0.5 * (unit_direction.y() + 1.0);
+	(1.0 - a) * Color::new(1.0, 1.0, 1.0) + a * Color::new(0.5, 0.7, 1.0)
 }
 
-fn main() {
+fn main() -> io::Result<()> {
 
 	// Image
 	let aspect_ratio = 16.0 / 9.0;
@@ -21,7 +23,6 @@ fn main() {
 	let image_height = (image_width as f64 / aspect_ratio) as i32;
 	let image_height = if image_height < 1 { 1 } else { image_height };
 
-	
 	// Camera
 	let focal_length = 1.0;
 	let viewport_height = 2.0;
@@ -42,17 +43,19 @@ fn main() {
 	let pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
 	// Render
-	let mut stdout = io::stdout();
-	if let Err(e) = writeln!(stdout, "P3\n{} {}\n255\n", image_width, image_height) {
-		eprintln!("Couldn't write to file: {}", e);
-	}
+	
+	let mut out = File::create("output.ppm")?;
+	// let mut out = io::stdout();
+	writeln!(out, "P3\n{} {}\n255\n", image_width, image_height)?;
 
 	for j in 0..image_height {
 		for i in 0..image_width {
 			let pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
 			let r = Ray::new(camera_center, pixel_center - camera_center);
 			let pixel_color = ray_color(r);
-      write_color(&mut stdout, pixel_color)
+      write_color(&mut out, pixel_color)?;
 		}
 	}
+
+	Ok(())
 }
