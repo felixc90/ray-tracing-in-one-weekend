@@ -1,5 +1,6 @@
 pub mod color;
 pub mod vec3;
+pub mod ray;
 use std::io::{self, Write};
 
 use color::{Color, write_color};
