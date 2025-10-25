@@ -7,12 +7,13 @@ use std::{f64, fs::File, io::{self, Write}};
 use rtweekend::color::{Color, write_color};
 use rtweekend::ray::{Ray};
 use rtweekend::vec3::{Point3, Vec3};
+use rtweekend::interval::Interval;
 
 use crate::{hittable::{HitRecord, Hittable}, hittable_list::HittableList, sphere::Sphere};
 
 fn ray_color<T: Hittable>(r: &Ray, world: &T) -> Color {
 	let mut rec = HitRecord::default();
-	if world.hit(r, 0.0, f64::INFINITY, &mut rec) {
+	if world.hit(r, Interval::new(0.0, f64::INFINITY), &mut rec) {
 		return 0.5 * (rec.normal + Color::new(1, 1, 1));
 	}
 
@@ -42,7 +43,7 @@ fn main() -> io::Result<()> {
 	let viewport_height = 2.0;
 	let viewport_width = viewport_height * (image_width as f64 / image_height as f64);
 	let camera_center = Point3::new(0, 0, 0);
-
+	
 	// Calculate the vectors across the horizontal and down the vertical viewport edges.
 	let viewport_u = Vec3::new(viewport_width, 0.0, 0.0);
 	let viewport_v = Vec3::new(0.0, -viewport_height, 0.0);
