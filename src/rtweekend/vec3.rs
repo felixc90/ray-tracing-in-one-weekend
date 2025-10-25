@@ -11,7 +11,7 @@ use std::ops::{
 };
 use std::fmt;
 
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct Vec3 {
 	x: f64,
 	y: f64,
