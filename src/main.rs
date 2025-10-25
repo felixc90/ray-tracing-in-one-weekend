@@ -1,76 +1,24 @@
+use std::io;
+
+use crate::camera::Camera;
+use crate::hittable_list::HittableList;
+use crate::rtweekend::vec3::Point3;
+use crate::sphere::Sphere;
+
 pub mod hittable;
 pub mod hittable_list;
 pub mod sphere;
 pub mod rtweekend;
-
-use std::{f64, fs::File, io::{self, Write}};
-use rtweekend::color::{Color, write_color};
-use rtweekend::ray::{Ray};
-use rtweekend::vec3::{Point3, Vec3};
-use rtweekend::interval::Interval;
-
-use crate::{hittable::{HitRecord, Hittable}, hittable_list::HittableList, sphere::Sphere};
-
-fn ray_color<T: Hittable>(r: &Ray, world: &T) -> Color {
-	let mut rec = HitRecord::default();
-	if world.hit(r, Interval::new(0.0, f64::INFINITY), &mut rec) {
-		return 0.5 * (rec.normal + Color::new(1, 1, 1));
-	}
-
-	let unit_direction = r.direction().unit_vector();
-	let a = 0.5 * (unit_direction.y() + 1.0);
-	(1.0 - a) * Color::new(1.0, 1.0, 1.0) + a * Color::new(0.5, 0.7, 1.0)
-}
+pub mod camera;
 
 fn main() -> io::Result<()> {
-
-	// Image
-	let aspect_ratio = 16.0 / 9.0;
-	let image_width = 400;
-
-	// Calculate the image height, and ensure that it's at least 1.
-	let image_height = (image_width as f64 / aspect_ratio) as i32;
-	let image_height = if image_height < 1 { 1 } else { image_height };
-
-	// World
 	let mut world = HittableList::new();
 
 	world.add(Box::new(Sphere::new(Point3::new(0,0,-1), 0.5)));
 	world.add(Box::new(Sphere::new(Point3::new(0.0,-100.5,-1.0), 100.0)));
 
-	// Camera
-	let focal_length = 1.0;
-	let viewport_height = 2.0;
-	let viewport_width = viewport_height * (image_width as f64 / image_height as f64);
-	let camera_center = Point3::new(0, 0, 0);
-	
-	// Calculate the vectors across the horizontal and down the vertical viewport edges.
-	let viewport_u = Vec3::new(viewport_width, 0.0, 0.0);
-	let viewport_v = Vec3::new(0.0, -viewport_height, 0.0);
-
-	// Calculate the horizontal and vertical delta vectors from pixel to pixel.
-	let pixel_delta_u = viewport_u / image_width;
-	let pixel_delta_v = viewport_v / image_height;
-
-	// Calculate the location of the upper left pixel.
-	let viewport_upper_left = 
-		camera_center - Vec3::new(0.0, 0.0, focal_length) - 0.5 * viewport_u - 0.5 * viewport_v;
-	let pixel00_loc = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
-
-	// Render
-	
-	let mut out = File::create("output.ppm")?;
-	// let mut out = io::stdout();
-	writeln!(out, "P3\n{} {}\n255\n", image_width, image_height)?;
-
-	for j in 0..image_height {
-		for i in 0..image_width {
-			let pixel_center = pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
-			let r = Ray::new(camera_center, pixel_center - camera_center);
-			let pixel_color = ray_color(&r, &world);
-      write_color(&mut out, pixel_color)?;
-		}
-	}
+	let mut cam = Camera::default();
+	cam.render(&world)?;
 
 	Ok(())
 }
