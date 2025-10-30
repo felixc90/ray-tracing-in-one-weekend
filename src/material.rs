@@ -2,6 +2,7 @@ use crate::hittable::HitRecord;
 use crate::rtweekend::color::Color;
 use crate::rtweekend::ray::Ray;
 
+pub mod dielectric;
 pub mod lambertian;
 pub mod metal;
 

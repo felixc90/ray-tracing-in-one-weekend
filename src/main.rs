@@ -3,6 +3,7 @@ use std::rc::Rc;
 
 use crate::camera::Camera;
 use crate::hittable_list::HittableList;
+use crate::material::dielectric::Dielectric;
 use crate::material::lambertian::Lambertian;
 use crate::material::metal::Metal;
 use crate::rtweekend::color::Color;
@@ -21,7 +22,8 @@ fn main() -> io::Result<()> {
 
     let material_ground = Lambertian::new(Color::new(0.8, 0.8, 0.0));
     let material_center = Lambertian::new(Color::new(0.1, 0.2, 0.5));
-    let material_left = Metal::new(Color::new(0.8, 0.8, 0.8), 0.3);
+    let material_left = Dielectric::new(1.5);
+    let material_bubble = Dielectric::new(1.0 / 1.5);
     let material_right = Metal::new(Color::new(0.8, 0.6, 0.2), 1.0);
 
     world.add(Box::new(Sphere::new(
@@ -38,6 +40,11 @@ fn main() -> io::Result<()> {
         Point3::new(-1.0, 0.0, -1.0),
         0.5,
         Rc::new(material_left),
+    )));
+    world.add(Box::new(Sphere::new(
+        Point3::new(-1.0, 0.0, -1.0),
+        0.4,
+        Rc::new(material_bubble),
     )));
     world.add(Box::new(Sphere::new(
         Point3::new(1.0, 0.0, -1.0),
