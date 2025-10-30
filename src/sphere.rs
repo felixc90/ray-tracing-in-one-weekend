@@ -26,7 +26,7 @@ impl Hittable for Sphere {
 			return false;
 		}
 
-		let sqrtd = f64::sqrt(discriminant);
+		let sqrtd = discriminant.sqrt();
 		let mut root = (h - sqrtd) / a;
 		if !ray_t.surrounds(root) {
 			root = (h + sqrtd) / a;
