@@ -2,6 +2,9 @@ use crate::hittable::HitRecord;
 use crate::rtweekend::color::Color;
 use crate::rtweekend::ray::Ray;
 
+pub mod lambertian;
+pub mod metal;
+
 pub trait Material {
     fn scatter(
         &self,

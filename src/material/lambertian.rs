@@ -3,8 +3,14 @@ use crate::{
     rtweekend::{color::Color, ray::Ray, vec3::Vec3},
 };
 
-struct Lambertian {
+pub struct Lambertian {
     albedo: Color,
+}
+
+impl Lambertian {
+    pub fn new(albedo: Color) -> Self {
+        Lambertian { albedo }
+    }
 }
 
 impl Material for Lambertian {

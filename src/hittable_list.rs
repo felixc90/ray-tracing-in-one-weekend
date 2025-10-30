@@ -32,7 +32,7 @@ impl Hittable for HittableList {
             let mut temp_rec = HitRecord::default();
             if object.hit(r, Interval::new(ray_t.min(), closest_so_far), &mut temp_rec) {
                 hit_anything = true;
-                closest_so_far = rec.t;
+                closest_so_far = temp_rec.t;
                 *rec = temp_rec;
             }
         }
