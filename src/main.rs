@@ -7,7 +7,7 @@ use crate::material::dielectric::Dielectric;
 use crate::material::lambertian::Lambertian;
 use crate::material::metal::Metal;
 use crate::rtweekend::color::Color;
-use crate::rtweekend::vec3::Point3;
+use crate::rtweekend::vec3::{Point3, Vec3};
 use crate::sphere::Sphere;
 
 pub mod camera;
@@ -22,8 +22,8 @@ fn main() -> io::Result<()> {
 
     let material_ground = Lambertian::new(Color::new(0.8, 0.8, 0.0));
     let material_center = Lambertian::new(Color::new(0.1, 0.2, 0.5));
-    let material_left = Dielectric::new(1.5);
-    let material_bubble = Dielectric::new(1.0 / 1.5);
+    let material_left = Dielectric::new(1.50);
+    let material_bubble = Dielectric::new(1.00 / 1.50);
     let material_right = Metal::new(Color::new(0.8, 0.6, 0.2), 1.0);
 
     world.add(Box::new(Sphere::new(
@@ -58,6 +58,14 @@ fn main() -> io::Result<()> {
     cam.image_width = 400;
     cam.samples_per_pixel = 100;
     cam.max_depth = 50;
+
+    cam.vfov = 20.0;
+    cam.lookfrom = Point3::new(-2, 2, 1);
+    cam.lookat = Point3::new(0, 0, -1);
+    cam.vup = Vec3::new(0, 1, 0);
+
+    cam.defocus_angle = 10.0;
+    cam.focus_dist = 3.4;
 
     cam.render(&world)?;
 
