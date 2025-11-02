@@ -143,13 +143,13 @@ impl Camera {
 
     fn sample_square() -> Vec3 {
         // Returns the vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
-        return Vec3::new(random_double() - 0.5, random_double() - 0.5, 0.0);
+        Vec3::new(random_double() - 0.5, random_double() - 0.5, 0.0)
     }
 
     pub fn defocus_disk_sample(&self) -> Point3 {
         // Returns a random point in the camera defocus disk.
         let p = Vec3::random_in_unit_disk();
-        return self.center + (p.x() * self.defocus_disk_u) + (p.z() * self.defocus_disk_v);
+        self.center + (p.x() * self.defocus_disk_u) + (p.z() * self.defocus_disk_v)
     }
 }
 
